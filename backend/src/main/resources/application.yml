@@ -2,12 +2,14 @@ spring:
   application:
     name: backend
 
+  # 1. Database 설정 (환경 변수 권장)
   datasource:
-    url: jdbc:postgresql://localhost:5432/board
-    username: board_user
-    password: board_pw
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/board}
+    username: ${DB_USERNAME:board_user}
+    password: ${DB_PASSWORD:board_pw}
     driver-class-name: org.postgresql.Driver
 
+  # 2. JPA/Hibernate 설정
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,15 +18,29 @@ spring:
       hibernate:
         format_sql: true
 
+  # 3. OAuth2 설정 (이 위치가 정확합니다)
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${GH_CLIENT_ID}
+            client-secret: ${GH_CLIENT_SECRET}
+            scope:
+              - read:user
+              - user:email
+
+# 4. Storage 설정 (MinIO/S3)
 storage:
   s3:
-    endpoint: http://localhost:9000
-    access-key: minioadmin
-    secret-key: minioadmin123
-    bucket: board-attachment
-    region: us-east-1
+    endpoint: ${S3_ENDPOINT:http://localhost:9000}
+    access-key: ${S3_ACCESS_KEY:minioadmin}
+    secret-key: ${S3_SECRET_KEY:minioadmin123}
+    bucket: ${S3_BUCKET:board-attachment}
+    region: ${S3_REGION:us-east-1}
 
+# 5. 사용자 정의 보안 설정 (JWT)
 security:
   jwt:
-    secret: "CHANGE_ME_TO_LONG_RANDOM_SECRET_32+_CHARS"
+    secret: ${JWT_SECRET:CHANGE_ME_TO_LONG_RANDOM_SECRET_32_CHARS}
     access-token-exp-minutes: 60

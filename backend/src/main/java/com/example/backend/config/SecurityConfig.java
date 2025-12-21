@@ -1,7 +1,10 @@
 package com.example.backend.config;
 
+import com.example.backend.security.CustomOAuth2UserService;
 import com.example.backend.security.JwtAuthenticationFilter;
 import com.example.backend.security.JwtTokenProvider;
+import com.example.backend.security.OAuth2SuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,41 +21,33 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtTokenProvider tokenProvider;
-
-    public SecurityConfig(JwtTokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
+    private final CustomOAuth2UserService customOAuth2UserService; // 추가
+    private final OAuth2SuccessHandler oauth2SuccessHandler; // 추가
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ 추가
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable())
+                .formLogin(f -> f.disable())
+                .httpBasic(h -> h.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ preflight 허용 (매우 중요)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // 로그인/토큰 발급 공개
-                        .requestMatchers("/api/auth/**").permitAll()
-
-                        // 조회는 공개
-                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/attachments/**").permitAll()
-
-                        // 나머지는 인증 필요
+                        .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll() // OAuth2 경로 허용
+                        .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/attachments/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(
-                        new JwtAuthenticationFilter(tokenProvider),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                // OAuth2 로그인 설정 추가
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oauth2SuccessHandler)
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
