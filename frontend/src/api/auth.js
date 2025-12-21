@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8080";
+const API_BASE = "";
 const TOKEN_KEY = "accessToken";
 
 // 회원가입 함수도 추가해두면 좋습니다.
