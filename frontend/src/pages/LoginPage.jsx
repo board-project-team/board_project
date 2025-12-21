@@ -8,7 +8,7 @@ export default function LoginPage() {
     const [err, setErr] = useState("");
     const navigate = useNavigate();
 
-    const API_BASE_URL = "http://localhost:8080";
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
     const SOCIAL_AUTH_URL = `${API_BASE_URL}/oauth2/authorization`;
 
     async function handleLogin(e) {
