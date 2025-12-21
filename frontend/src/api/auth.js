@@ -1,4 +1,4 @@
-const API_BASE = "";
+const API_BASE = "http://34.50.5.152";
 const TOKEN_KEY = "accessToken";
 
 // 회원가입 함수도 추가해두면 좋습니다.
