@@ -1,8 +1,8 @@
-name: Java CI with Gradle and Docker
+name: Java and Node CI with Docker
 
 on:
   push:
-    branches: [ "main" ] # main 브랜치에 푸시될 때 실행
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -11,40 +11,48 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # 1. Java 설정
+      # --- Backend Build ---
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      # 2. Gradle 빌드 전용 Action 설정 (캐싱 지원)
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-
-      # 3. gradlew 실행 권한 부여 (backend 폴더 내부의 파일 지정)
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Build Backend
+        run: |
+          chmod +x gradlew
+          ./gradlew build -x test
         working-directory: ./backend
 
-      # 4. Gradle 빌드 (backend 폴더 내에서 실행 및 테스트 제외 옵션)
-      - name: Build with Gradle
-        run: ./gradlew build -x test
-        working-directory: ./backend
+      # --- Frontend Build ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Build Frontend
+        run: |
+          npm install
+          npm run build
+        working-directory: ./frontend
 
-      # 5. Docker Hub 로그인
+      # --- Docker Push ---
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 6. Docker 이미지 빌드 및 푸시
-      - name: Build and push Docker image
+      - name: Build and push Backend image
         uses: docker/build-push-action@v4
         with:
-          # Dockerfile이 backend 폴더 안에 있으므로 context를 지정합니다.
           context: ./backend
           push: true
-          # cheongmyeong/레포지토리이름:latest 형식으로 생성됩니다.
           tags: ${{ secrets.DOCKER_USERNAME }}/board-app:latest
+
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/board-frontend:latest
