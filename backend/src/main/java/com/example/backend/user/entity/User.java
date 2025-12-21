@@ -14,7 +14,11 @@ public class User extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column // 소셜 사용자는 비밀번호가 없을 수 있으므로 nullable 유지
+    private String password;
+
+//    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -28,8 +32,9 @@ public class User extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public User(String email, String name, String provider, String providerId, Role role) {
+    public User(String email, String password, String name, String provider, String providerId, Role role) {
         this.email = email;
+        this.password = password;
         this.name = name;
         this.provider = provider;
         this.providerId = providerId;

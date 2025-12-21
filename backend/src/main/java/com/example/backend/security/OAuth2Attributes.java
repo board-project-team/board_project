@@ -29,11 +29,25 @@ public class OAuth2Attributes {
 
     // GitHub, Google 등 제공자별로 데이터를 추출하는 정적 메서드
     public static OAuth2Attributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
-        if ("github".equals(registrationId)) {
-            return ofGithub(userNameAttributeName, attributes);
+        if ("naver".equals(registrationId)) {
+            return ofNaver("id", attributes); // 네이버는 고유 식별자가 id임
         }
-        // 나중에 google 등 추가 가능
-        return null;
+        // 기존 GitHub 로직
+        return ofGithub(userNameAttributeName, attributes);
+    }
+
+    private static OAuth2Attributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        // 1. 네이버는 "response"라는 키 안에 실제 유저 정보가 들어있습니다.
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+        return OAuth2Attributes.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .provider("naver")
+                .providerId((String) response.get("id")) // 네이버의 고유 식별자
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuth2Attributes ofGithub(String userNameAttributeName, Map<String, Object> attributes) {

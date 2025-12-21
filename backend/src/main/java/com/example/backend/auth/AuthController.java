@@ -1,8 +1,10 @@
 package com.example.backend.auth;
 
-import com.example.backend.security.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,34 +16,20 @@ public class AuthController {
         this.authService = authService;
     }
 
-    public record LoginRequest(String username, String password) {}
-    public record LoginResponse(String accessToken) {}
+    // DTO 정의
+    public record LoginRequest(String email, String password) {}
+    public record SignupRequest(String email, String password, String name) {}
+    public record AuthResponse(String accessToken) {}
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody SignupRequest req) {
+        authService.signup(req.email(), req.password(), req.name());
+        return ResponseEntity.ok("회원가입 성공");
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
-        String token = authService.login(req.username(), req.password());
-        return ResponseEntity.ok(new LoginResponse(token));
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest req) {
+        String token = authService.login(req.email(), req.password());
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }
-
-//@RestController
-//@RequestMapping("/api/auth")
-//public class AuthController {
-//
-//    private final JwtTokenProvider tokenProvider;
-//
-//    public AuthController(JwtTokenProvider tokenProvider) {
-//        this.tokenProvider = tokenProvider;
-//    }
-//
-//    public record LoginRequest(String username, String password) {}
-//    public record LoginResponse(String accessToken) {}
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
-//        // ✅ 연습용: 아무 username/password나 통과
-//        // (다음 단계에서 User 테이블/BCrypt로 바꿀 수 있음)
-//        String token = tokenProvider.createAccessToken(req.username());
-//        return ResponseEntity.ok(new LoginResponse(token));
-//    }
-//}
