@@ -18,7 +18,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 2. Gradle 빌드 (테스트 포함)
+      # 2. Gradle 빌드 (설치 및 실행 권한 해결)
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
       - name: Build with Gradle
         run: ./gradlew build
 
