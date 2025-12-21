@@ -1,30 +1,29 @@
-# 1단계: 빌드 스테이지 (Node.js 환경)
+# 1단계: 빌드 스테이지
 FROM node:18-alpine AS build
 WORKDIR /app
 
-# 빌드 시점에 전달받을 변수 정의
+# ✅ [중요] 빌드 시점에 전달받을 변수 정의 (npm install 보다 위에 있어도 됨)
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-# 의존성 설치 (캐시 활용을 위해 package.json만 먼저 복사)
+# 의존성 설치
 COPY package*.json ./
 RUN npm install
 
 # 전체 소스 복사
 COPY . .
 
-# [수정] 빌드 실행
-# 위에서 설정한 ENV값이 이 단계에서 정적 파일(.js) 내부로 주입됩니다.
+# ✅ [핵심] 이 단계에서 ENV값이 .js 파일 내부로 영구히 박힙니다.
 RUN npm run build
 
-# 2단계: 실행 스테이지 (Nginx 환경)
+# 2단계: 실행 스테이지 (Nginx)
 FROM nginx:stable-alpine
 
-# 빌드 스테이지에서 생성된 정적 파일(dist 폴더)을 Nginx의 기본 배포 경로로 복사
+# ✅ [중요] SPA 라우팅을 위한 Nginx 설정 파일 복사 (파일이 같은 폴더에 있어야 함)
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# 빌드된 정적 파일을 Nginx 경로로 복사
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Nginx 기본 포트 오픈
 EXPOSE 80
-
-# Nginx 서버 실행
 CMD ["nginx", "-g", "daemon off;"]
