@@ -4,12 +4,13 @@ import PostDetailPage from "./pages/PostDetailPage";
 import PostCreatePage from "./pages/PostCreatePage";
 import PostEditPage from "./pages/PostEditPage";
 import LoginPage from "./pages/LoginPage.jsx";
+import SignupPage from "./pages/SignupPage.jsx"; // ✅ 추가
+import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 
 function isLoggedIn() {
     return !!localStorage.getItem("accessToken");
 }
 
-// 로그인 필요한 라우트 보호용
 function RequireAuth({ children }) {
     return isLoggedIn() ? children : <Navigate to="/login" replace />;
 }
@@ -17,10 +18,14 @@ function RequireAuth({ children }) {
 export default function App() {
     return (
         <Routes>
-            {/* 기본 진입은 로그인으로 */}
             <Route path="/" element={<Navigate to="/login" replace />} />
-
             <Route path="/login" element={<LoginPage />} />
+
+            {/* ✅ 회원가입 경로 추가 (로그인 없이 접근 가능) */}
+            <Route path="/signup" element={<SignupPage />} />
+
+            {/* 소셜 로그인 리다이렉트 처리 */}
+            <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
 
             {/* 아래부터는 로그인 필요 */}
             <Route
@@ -56,7 +61,6 @@ export default function App() {
                 }
             />
 
-            {/* 없는 경로는 로그인으로 */}
             <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
     );
