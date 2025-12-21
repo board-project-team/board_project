@@ -1,6 +1,7 @@
 import { getToken, logout } from "./auth";
 
-const API_BASE = "http://localhost:8080";
+// 환경 변수가 있으면 사용하고, 없으면 로컬 개발용 주소를 기본값으로 사용합니다.
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 export async function apiFetch(path, options = {}) {
     const token = getToken();
