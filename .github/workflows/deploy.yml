@@ -1,0 +1,39 @@
+name: Deploy to GKE
+
+on:
+  workflow_run:
+    workflows: ["Java CI with Gradle and Docker"] # CI가 성공하면 실행
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 1. GCP 인증
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      # 2. GKE 자격 증명 가져오기
+      - name: Get GKE Credentials
+        uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ secrets.GKE_ZONE }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # 3. Kubernetes 배포 (모든 설정 파일 적용)
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -f k8s/persistence.yaml
+          kubectl apply -f k8s/postgres.yaml
+          kubectl apply -f k8s/minio.yaml
+          kubectl apply -f k8s/deployment.yaml # 백엔드 앱
+          kubectl rollout restart deployment/board-app

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: board-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: board-app
+  template:
+    metadata:
+      labels:
+        app: board-app
+    spec:
+      containers:
+        - name: board-app
+          image: cheongmyeong/board-app:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: board-app-service
+spec:
+  type: LoadBalancer # 외부에서 접속 가능한 IP를 할당받음
+  selector:
+    app: board-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
