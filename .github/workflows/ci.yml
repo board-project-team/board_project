@@ -44,6 +44,7 @@ jobs:
       - name: Build and push Frontend image
         uses: docker/build-push-action@v4
         with:
+          no-cache: true # 🚩 이전 빌드 기록을 무시하고 새로 빌드
           context: ./frontend
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/board-frontend:latest
