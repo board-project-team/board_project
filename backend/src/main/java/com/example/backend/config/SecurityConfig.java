@@ -47,7 +47,7 @@ public class SecurityConfig {
                         
                         .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/attachments/**").permitAll()
-                        
+
                         // ⚠️ 이 줄이 항상 가장 마지막에 있어야 합니다.
                         .anyRequest().authenticated()
                 )

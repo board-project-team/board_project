@@ -7,19 +7,35 @@ metadata:
     kubernetes.io/ingress.class: "gce" 
 spec:
   rules:
-  - http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: board-app-service # API 요청은 백엔드로!
-            port:
-              number: 8080
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: board-frontend-service # 나머지는 프론트엔드로!
-            port:
-              number: 80
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: board-app-service
+                port:
+                  number: 8080
+          # oauth 관련 요청도 백엔드로 요청되도록 설정
+          - path: /oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: board-app-service
+                port:
+                  number: 8080
+          - path: /login/oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: board-app-service
+                port:
+                  number: 8080
+          # -----------------------------------
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: board-frontend-service
+                port:
+                  number: 80
