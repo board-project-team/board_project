@@ -37,6 +37,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: board-app-service
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+    # 🚩 이 줄을 반드시 추가해야 BackendConfig가 작동합니다!
+    cloud.google.com/backend-config: '{"default": "board-backend-config"}'
 spec:
   type: ClusterIP # 프론트엔드만 백엔드에 접근하면 되므로 내부용으로 설정
   selector:
