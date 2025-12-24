@@ -1,13 +1,22 @@
-const API_BASE = "http://34.50.5.152";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ""; 
+
 const TOKEN_KEY = "accessToken";
+// const API_BASE = "http://34.50.5.152";
+// const TOKEN_KEY = "accessToken";
 
 // 회원가입 함수도 추가해두면 좋습니다.
 export async function signup(email, password, name) {
+    // 이제 ${API_BASE}가 빈 값이면 "/api/auth/signup"으로 요청이 갑니다.
     const res = await fetch(`${API_BASE}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
     });
+    // const res = await fetch(`${API_BASE}/api/auth/signup`, {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ email, password, name }),
+    // });
     if (!res.ok) throw new Error("회원가입 실패");
     return true;
 }
