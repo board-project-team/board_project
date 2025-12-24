@@ -30,6 +30,7 @@ jobs:
       - name: Deploy to GKE
         run: |
           kubectl apply -f k8s/persistence.yaml
+          kubectl apply -f k8s/backend-config.yaml  # 🚩 새로 만든 파일을 여기에 추가하세요!
           kubectl apply -f k8s/postgres.yaml
           kubectl apply -f k8s/minio.yaml
           kubectl apply -f k8s/deployment.yaml
