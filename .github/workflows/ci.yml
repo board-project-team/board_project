@@ -49,4 +49,5 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/board-frontend:latest
           # ✅ [핵심] Dockerfile의 ARG로 아이피를 직접 쏴줍니다.
           build-args: |
-            VITE_API_BASE_URL=http://34.50.5.152
+            VITE_API_BASE_URL=
+            # http://34.50.5.152
