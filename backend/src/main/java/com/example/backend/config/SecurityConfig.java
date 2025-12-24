@@ -30,6 +30,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService; // 추가
     private final OAuth2SuccessHandler oauth2SuccessHandler; // 추가
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -40,19 +41,48 @@ public class SecurityConfig {
                 .httpBasic(h -> h.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll() // OAuth2 경로 허용
+                        
+                        // 🚩 여기입니다! 인그레스 로드밸런서가 통과할 수 있게 이 줄을 추가합니다.
+                        .requestMatchers("/api/health").permitAll() 
+                        
+                        .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/attachments/**").permitAll()
+                        
+                        // ⚠️ 이 줄이 항상 가장 마지막에 있어야 합니다.
                         .anyRequest().authenticated()
                 )
-                // OAuth2 로그인 설정 추가
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oauth2SuccessHandler)
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
-
+    
         return http.build();
     }
+    
+    // @Bean
+    // public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    //     http
+    //             .csrf(csrf -> csrf.disable())
+    //             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    //             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    //             .formLogin(f -> f.disable())
+    //             .httpBasic(h -> h.disable())
+    //             .authorizeHttpRequests(auth -> auth
+    //                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+    //                     .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll() // OAuth2 경로 허용
+    //                     .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/attachments/**").permitAll()
+    //                     .anyRequest().authenticated()
+    //             )
+    //             // OAuth2 로그인 설정 추가
+    //             .oauth2Login(oauth2 -> oauth2
+    //                     .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+    //                     .successHandler(oauth2SuccessHandler)
+    //             )
+    //             .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+    //     return http.build();
+    // }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
