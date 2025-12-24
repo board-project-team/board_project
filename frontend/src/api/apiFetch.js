@@ -1,4 +1,6 @@
 // apiFetch.js 상단
+import {getToken} from "./auth.js";
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || ""; // 🚩 || "" 를 반드시 추가하세요.
 // 환경 변수가 있으면 사용하고, 없으면 로컬 개발용 주소를 기본값으로 사용합니다.
 
