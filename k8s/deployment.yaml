@@ -51,6 +51,7 @@ spec:
       containers:
         - name: board-frontend
           image: cheongmyeong/board-frontend:latest
+          imagePullPolicy: Always # 🚩 항상 새로운 이미지를 Pull 하도록 설정
           ports:
             - containerPort: 80
 ---
