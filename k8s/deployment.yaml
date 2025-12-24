@@ -54,13 +54,13 @@ spec:
           ports:
             - containerPort: 80
 ---
-# 4. Frontend Service (사용자가 접속하는 대문)
+# 4. Frontend Service (사용자가 접속하는 대문 역할을 Ingress에게 넘깁니다)
 apiVersion: v1
 kind: Service
 metadata:
   name: board-frontend-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP  # 🚩 LoadBalancer에서 ClusterIP로 반드시 변경해야 합니다!
   selector:
     app: board-frontend
   ports:
