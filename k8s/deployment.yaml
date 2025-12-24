@@ -21,13 +21,13 @@ spec:
           # 🚩 아래 내용을 추가하세요
           readinessProbe:
             httpGet:
-              path: /api/auth/login  # 실제 존재하는 API 경로 중 하나를 지정합니다.
+              path: /api/health  # 🚩 새로 만든 경로로 변경
               port: 8080
-            initialDelaySeconds: 20  # 서버 부팅 시간을 기다려줍니다.
-            periodSeconds: 10        # 10초마다 확인합니다.
+            initialDelaySeconds: 20
+            periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /api/auth/login
+              path: /api/health  # 🚩 동일하게 변경
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 20
