@@ -33,5 +33,6 @@ jobs:
           kubectl apply -f k8s/postgres.yaml
           kubectl apply -f k8s/minio.yaml
           kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/ingress.yaml  # 🚩 이 라인이 빠져있으면 인그레스가 생성되지 않습니다!
           kubectl rollout restart deployment/board-backend
           kubectl rollout restart deployment/board-frontend
