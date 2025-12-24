@@ -18,6 +18,19 @@ spec:
           image: cheongmyeong/board-app:latest
           ports:
             - containerPort: 8080
+          # 🚩 아래 내용을 추가하세요
+          readinessProbe:
+            httpGet:
+              path: /api/auth/login  # 실제 존재하는 API 경로 중 하나를 지정합니다.
+              port: 8080
+            initialDelaySeconds: 20  # 서버 부팅 시간을 기다려줍니다.
+            periodSeconds: 10        # 10초마다 확인합니다.
+          livenessProbe:
+            httpGet:
+              path: /api/auth/login
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
 ---
 # 2. Backend Service
 apiVersion: v1
