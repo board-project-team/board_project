@@ -51,3 +51,14 @@ jobs:
           # ✅ [핵심] Dockerfile의 ARG로 아이피를 직접 쏴줍니다.
           build-args: |
             VITE_API_BASE_URL=
+            
+            # (기존 Frontend 빌드 단계 아래에 추가)
+
+      # --- Docker Build & Push (Profanity Filter) ---
+      - name: Build and push Filter image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./serverless_function
+          file: ./serverless_function/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/profanity-filter:latest
