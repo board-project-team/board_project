@@ -46,7 +46,7 @@ jobs:
           service: 'profanity-filter'
           image: '${{ secrets.DOCKER_USERNAME }}/profanity-filter:latest'
           region: 'asia-northeast3' # 서울 리전
-          flags: '--allow-unauthenticated'
+          flags: '--no-allow-unauthenticated' # 인증된 요청만 허용
 
       # 배포된 Cloud Run의 URL을 확인하기 위한 로그 (선택사항)
       - name: Show Filter Service URL
