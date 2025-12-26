@@ -1,3 +1,5 @@
+package com.example.backend.common.filter;
+
 @Component
 public class CloudRunContentFilter implements ContentFilter {
 
