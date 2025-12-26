@@ -1,6 +1,7 @@
 package com.example.backend.common.exception;
 
 import com.example.backend.common.exception.ResourceNotFoundException;
+import com.example.backend.common.exception.ProfanityException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

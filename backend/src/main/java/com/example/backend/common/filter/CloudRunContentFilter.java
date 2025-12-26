@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import com.example.backend.common.exception.ProfanityException;
 import com.example.backend.common.dto.FilterResponse;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class CloudRunContentFilter implements ContentFilter {
