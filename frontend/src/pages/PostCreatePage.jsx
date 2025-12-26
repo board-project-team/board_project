@@ -24,8 +24,23 @@ export default function PostCreatePage() {
             const created = await createPost({ title, content });
             navigate(`/posts/${created.id}`);
         } catch (err) {
-            console.error(err);
-            setError("게시글 생성에 실패했습니다. (로그인/토큰 확인)");
+            // 기존 apiJson이 throw하는 에러 메시지: "API 실패 (status=400)"
+            const errorMsg = err.message || "";
+
+            if (errorMsg.includes("status=400")) {
+                // 백엔드의 ProfanityException(400) 발생 시
+                setError("제목이나 내용에 비속어가 포함되어 있어 등록할 수 없습니다.");
+            }
+            else if (errorMsg.includes("status=401") || errorMsg.includes("status=403") || errorMsg === "UNAUTHORIZED") {
+                // 인증/권한 실패 시
+                setError("로그인 세션이 만료되었거나 권한이 없습니다. 다시 로그인해 주세요.");
+            }
+            else {
+                // 그 외 기타 에러
+                setError("게시글 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+            }
+
+            console.error("Post Creation Error:", errorMsg);
         } finally {
             setLoading(false);
         }
