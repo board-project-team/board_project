@@ -5,7 +5,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import com.example.backend.common.exception.ProfanityException;
-import com.example.backend.post.dto.FilterResponse;
+import com.example.backend.common.dto.FilterResponse;
 
 @Component
 public class CloudRunContentFilter implements ContentFilter {
