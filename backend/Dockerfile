@@ -19,6 +19,9 @@ ENV NAVER_CLIENT_SECRET=your_naver_secret
 
 ENV JWT_SECRET=CHANGE_ME_TO_LONG_RANDOM_SECRET_32_CHARS
 
+# 욕설 필터링 API URL 설정
+ENV FILTER_API_URL=https://profanity-filter-xxxx.a.run.app/filter
+
 # 3. 기존 빌드 결과물 복사 로직 유지
 # (주의: 이 방식은 도커 빌드 전 반드시 './gradlew build'가 선행되어야 합니다)
 ARG JAR_FILE=build/libs/*.jar

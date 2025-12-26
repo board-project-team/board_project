@@ -25,15 +25,21 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileStorageService storageService;
+    private final ContentFilter contentFilter;
 
-    public PostService(PostRepository postRepository, FileStorageService storageService) {
+    public PostService(PostRepository postRepository, FileStorageService storageService, ContentFilter contentFilter) {
         this.postRepository = postRepository;
         this.storageService = storageService;
+        this.contentFilter = contentFilter;
     }
 
     // CRUD
     // Create 수정 (Controller에서 받은 username을 저장)
     public PostResponse create(PostCreateRequest req, String username) {
+        // 게시글 저장 전 필터링 수행
+        contentFilter.checkProfanity(req.content());
+        contentFilter.checkProfanity(req.title());
+
         // req.author() 대신 인증된 username을 강제로 사용 (보안상 안전)
         Post post = new Post(req.title(), req.content(), username);
         Post saved = postRepository.save(post);
