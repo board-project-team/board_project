@@ -12,6 +12,11 @@ public class ApiExceptionHandler {
         return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(ProfanityException.class)
+    public ResponseEntity<?> handleProfanity(ProfanityException e) {
+        return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage()));
+    }
+
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<?> handleForbidden(Exception e) {
         return ResponseEntity.status(403).body(new ErrorResponse("FORBIDDEN"));

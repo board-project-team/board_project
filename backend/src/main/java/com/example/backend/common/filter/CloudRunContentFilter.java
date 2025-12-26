@@ -1,5 +1,11 @@
 package com.example.backend.common.filter;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import com.example.backend.common.exception.ProfanityException;
+import com.example.backend.post.dto.FilterResponse;
 
 @Component
 public class CloudRunContentFilter implements ContentFilter {
@@ -27,13 +33,9 @@ public class CloudRunContentFilter implements ContentFilter {
             FilterResponse result = response.getBody();
 
             if (result != null && "rejected".equals(result.status())) {
-                // 비속어가 발견된 경우 사용자에게 에러 메시지 전달
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "비속어가 포함되어 있습니다: " + String.join(", ", result.detected_words())
-                );
+                throw new ProfanityException("비속어가 포함되어 있습니다: " + String.join(", ", result.detected_words()));
             }
-        } catch (ResponseStatusException e) {
+        } catch (ProfanityException e) {
             // 위에서 던진 예외는 그대로 다시 던짐
             throw e;
         } catch (Exception e) {
