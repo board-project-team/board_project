@@ -31,8 +31,6 @@ jobs:
         run: |
           kubectl apply -f k8s/persistence.yaml
           kubectl apply -f k8s/backend-config.yaml
-#          kubectl apply -f k8s/postgres.yaml
-#          kubectl apply -f k8s/minio.yaml
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/ingress.yaml
           kubectl rollout restart deployment/board-backend
