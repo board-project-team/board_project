@@ -16,9 +16,12 @@ spec:
       containers:
         - name: board-backend
           image: cheongmyeong/board-app:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          # 🚩 아래 내용을 추가하세요
+          env:
+            - name: FILTER_API_URL
+              value: "https://profanity-filter-374506862818.asia-northeast3.run.app/filter"
           readinessProbe:
             httpGet:
               path: /api/health  # 🚩 새로 만든 경로로 변경
