@@ -1,4 +1,5 @@
 package com.example.backend.common.dto;
+import java.util.List;
 
 public record FilterResponse(
         String status,
