@@ -38,19 +38,19 @@ jobs:
           kubectl rollout restart deployment/board-backend
           kubectl rollout restart deployment/board-frontend
 
-    # 욕설 필터링 서비스 cloud run에 배포
-      - name: Deploy Profanity Filter to Cloud Run
-        id: deploy-filter
-        uses: 'google-github-actions/deploy-cloudrun@v1'
-        with:
-          service: 'profanity-filter'
-          image: '${{ secrets.DOCKER_USERNAME }}/profanity-filter:latest'
-          region: 'asia-northeast3' # 서울 리전
-          flags: '--no-allow-unauthenticated' # 인증된 요청만 허용
-
-      # 배포된 Cloud Run의 URL을 확인하기 위한 로그 (선택사항)
-      - name: Show Filter Service URL
-        run: echo "Filter Service URL is ${{ steps.deploy-filter.outputs.url }}"
-
-
-
+#    # 욕설 필터링 서비스 cloud run에 배포
+#      - name: Deploy Profanity Filter to Cloud Run
+#        id: deploy-filter
+#        uses: 'google-github-actions/deploy-cloudrun@v1'
+#        with:
+#          service: 'profanity-filter'
+#          image: '${{ secrets.DOCKER_USERNAME }}/profanity-filter:latest'
+#          region: 'asia-northeast3' # 서울 리전
+#          flags: '--no-allow-unauthenticated' # 인증된 요청만 허용
+#
+#      # 배포된 Cloud Run의 URL을 확인하기 위한 로그 (선택사항)
+#      - name: Show Filter Service URL
+#        run: echo "Filter Service URL is ${{ steps.deploy-filter.outputs.url }}"
+#
+#
+#
