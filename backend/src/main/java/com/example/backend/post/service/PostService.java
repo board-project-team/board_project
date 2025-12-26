@@ -7,6 +7,7 @@ import com.example.backend.post.entity.Post;
 import com.example.backend.post.entity.PostAttachment;
 import com.example.backend.post.repository.PostRepository;
 import com.example.backend.storage.FileStorageService;
+import com.example.backend.common.filter.ContentFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
