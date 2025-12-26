@@ -30,11 +30,11 @@ jobs:
       - name: Deploy to GKE
         run: |
           kubectl apply -f k8s/persistence.yaml
-          kubectl apply -f k8s/backend-config.yaml  # 🚩 새로 만든 파일을 여기에 추가하세요!
-          kubectl apply -f k8s/postgres.yaml
-          kubectl apply -f k8s/minio.yaml
+          kubectl apply -f k8s/backend-config.yaml
+#          kubectl apply -f k8s/postgres.yaml
+#          kubectl apply -f k8s/minio.yaml
           kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/ingress.yaml  # 🚩 이 라인이 빠져있으면 인그레스가 생성되지 않습니다!
+          kubectl apply -f k8s/ingress.yaml
           kubectl rollout restart deployment/board-backend
           kubectl rollout restart deployment/board-frontend
 
