@@ -49,7 +49,7 @@ export default function PostCreatePage() {
     return (
         <div style={{ padding: 20, maxWidth: 720 }}>
             <div style={{ marginBottom: 12 }}>
-                <Link to="/">← 목록으로</Link>
+                <Link to="/posts">← 목록으로</Link>
             </div>
 
             <h1>게시글 작성</h1>
