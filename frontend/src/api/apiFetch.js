@@ -16,7 +16,7 @@ export async function apiFetch(path, options = {}) {
 
     // 인증 실패(토큰 만료/무효)
     if (res.status === 401) {
-        logout();
+        // logout();
         throw new Error("UNAUTHORIZED");
     }
 
